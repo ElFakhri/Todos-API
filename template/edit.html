@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include 'head.html' %}
+
+<body>
+    {% include 'header.html' %}
+    <div class="container">
+        <h1>Edit</h1>
+        <form>
+            <label for="title">Title</label>
+            <input type="text" name="title" id="title" class="input-box" value="{{ title }}">
+            <label for="description">Description</label>
+            <textarea name="description" id="description" cols="20" rows="5" class="input-box"
+                value="">{{description}}</textarea>
+            <input type="submit" value="Submit" class="button">
+        </form>
+    </div>
+    <script>
+        const todoForm = document.querySelector("form")
+        const title = document.querySelector("input#title")
+        const description = document.querySelector("textarea#description")
+
+        const url = window.location.href
+        const splittedURL = url.split("/")
+        const id = parseInt(splittedURL[splittedURL.length - 2])
+
+        async function editTodo(payload) {
+            const response = await fetch(`/api/todos/${id}`, {
+                method: "PUT",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+
+            return await response.json()
+        }
+
+        todoForm.addEventListener("submit", event => {
+            event.preventDefault()
+
+            const body = {
+                title: title.value,
+                description: description.value
+            }
+
+            editTodo(body).then(data => { window.location.href = "/"; })
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include 'head.html' %}
+
+<body>
+    {% include 'header.html' %}
+    <div class="container">
+        <h1>{{ title }}</h1>
+        <p>{{ description }}
+        </p>
+        <button class="button" onclick="window.location.href='/todo/{{id}}/edit'">Edit</button>
+        <button id="deleteButton" class="button" style="background-color: red; border-color: red;">Delete</button>
+    </div>
+    <script>
+        const url = window.location.href
+        const splittedURL = url.split("/")
+        const id = parseInt(splittedURL[splittedURL.length - 1])
+        // this is my current way of getting the id, by taking the url,
+        // but i believe there is a better way by getting it through context, i just havent figured out how
+
+        const deleteButton = document.getElementById("deleteButton")
+
+        async function deleteTodo() {
+            const response = await fetch(`/api/todos/${id}`, {
+                method: "DELETE",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+            })
+
+            return await response.json()
+        }
+
+        deleteButton.addEventListener("click", function (e) {
+            deleteTodo().then(data => { window.location.href = "/"; })
+        })
+    </script>
+</body>
+
+</html>
