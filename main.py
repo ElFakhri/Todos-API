@@ -8,6 +8,7 @@ import models
 from database import engine
 
 app = FastAPI()
+models.Base.metadata.create_all(bind=engine)
 
 app.mount("/img", StaticFiles(directory="static/img"), name="img")
 app.mount("/css", StaticFiles(directory="static/css"), name="css")

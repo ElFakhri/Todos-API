@@ -5,21 +5,26 @@ import models
 import schemas
 
 
-def get_todos(db: Session):  # get a list of every todos
-    return db.query(models.Todo).all()
+def get_todos(db: Session, user: models.User):  # get a list of every todos
+    return (
+        db.query(models.Todo)
+        .filter(models.Todo.owner_email == user.email)
+        .all()
+    )
 
 
 def get_todo(db: Session, id: int):  # get a todo
     return db.query(models.Todo).filter(models.Todo.id == id).first()
 
 
-def create_todo(db: Session, obj_in: schemas.TodoCreate):
+def create_todo(db: Session, obj_in: schemas.TodoCreate, user: models.User):
     db_in = models.Todo(
         title=obj_in.title,
         description=obj_in.description,
         created_date=datetime.now(),
         last_updated_date=datetime.now(),
         is_done=False,
+        owner_email=user.email,
     )
 
     db.add(db_in)

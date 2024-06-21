@@ -23,6 +23,7 @@ class Todo(TodoBase):
     created_date: datetime
     last_updated_date: datetime
     is_done: bool
+    owner_email: EmailStr
 
     class Config:
         from_attributes = True
